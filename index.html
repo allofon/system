@@ -292,7 +292,7 @@ function buildFacets() {
         if (fk === "C" || fk === "A") {
           // single-select
           container.querySelectorAll("div").forEach(d => d.classList.remove("selected"));
-          selected[fk] = selected[fk] === opt.name ? null : opt.name;
+          selected[fk] = selected[fk] === opt.code ? null : opt.code;
           if (selected[fk]) div.classList.add("selected");
         } else {
           // multi-select
