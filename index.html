@@ -79,11 +79,7 @@ body {
   font-size: 1.2em;
   margin-right: 4px;
 }
-.facet-code.A{ color:#0b8043; }
-.facet-code.B{ color:#d93025; }
-.facet-code.C{ color:#1a73e8; }
-.facet-code.D{ color:#767957; }
-.facet-code.E{ color:#b710c9; }
+
 
 /* Svag bakgrund per facett */
 #facet-A { background-color: #e6f4ea; }
@@ -104,7 +100,7 @@ body {
 /* ===== Färgad kod/siffror ===== */
 #combined-code {
   margin-top: 5px;
-  font-family: monospace;
+  font-family: mono	space;
   font-weight: bold;
   font-size: 2.2em;
 }
@@ -206,11 +202,10 @@ body {
 <h2>Facetterat klassifikationssystem</h2>
 
 <div class="facet-container">
-  <div class="facet" id="facet-A"><h3>A</h3></div>
-  <div class="facet" id="facet-B"><h3>B</h3></div>
-  <div class="facet" id="facet-C"><h3>C</h3></div>
-  <div class="facet" id="facet-D"><h3>D</h3></div>
-  <div class="facet" id="facet-E"><h3>E</h3></div>
+  <div class="facet" id="facet-A"><h3>Vinstår</h3></div>
+  <div class="facet" id="facet-B"><h3>Nationalitet</h3></div>
+  <div class="facet" id="facet-C"><h3>Kön</h3></div>
+  <div class="facet" id="facet-D"><h3>Genre</h3></div>
 </div>
 
 <div id="selected-combination">Ingen facett vald</div>
@@ -227,222 +222,184 @@ body {
 <div id="index"></div>
 
 <script>
-
+/* ===== Databas ===== */
 let database = JSON.parse(localStorage.getItem("database")) || [];
 
+/* ===== Facetter ===== */
+const facets = {
+  A: [ { name: '1901', code: '1901' }, { name: '1902', code: '1902' }, { name: '1903', code: '1903' } ],
+  B: [ { name: 'Sverige', code: 'SE' }, { name: 'Norge', code: 'NO' }, { name: 'Finland', code: 'FI' } ],
+  C: [ { name: 'Icke-binär', code: 'IB' }, { name: 'Kvinna', code: 'K' }, { name: 'Man', code: 'M' } ],
+  D: [
+    { name: 'Autofiktion', code: 'A' },
+    { name: 'Biografi', code: 'B' },
+    { name: 'Barnbok', code: 'Bb' },
+    { name: 'Dramatik', code: 'D' },
+    { name: 'Essä', code: 'E' },
+    { name: 'Facklitteratur', code: 'F' },
+    { name: 'Komedi', code: 'K' },
+    { name: 'Lyrik', code: 'L' },
+    { name: 'Musiktext', code: 'Mu' },
+    { name: 'Novell', code: 'N' },
+    { name: 'Roman', code: 'R' }
+  ]
+};
+
+/* ===== Vald kombination ===== */
+const selected = { A:null, B: [], C:null, D: [] };
+
+/* ===== Lägg till i databas ===== */
 function addToDatabase(){
-
   const name = document.getElementById("object-name").value;
+  if(!name){ alert("Skriv ett namn på objektet"); return; }
 
-  if(!name){
-    alert("Skriv ett namn på objektet");
-    return;
-  }
-
-  const entry = {
-    name: name,
-    A: selected.A.join("+"),
-    B: selected.B || "",
-    C: selected.C || "",
-    D: selected.D || "",
-    E: selected.E || ""
-  };
+const entry = {
+  name: name,
+  A: selected.A || "",
+  B: selected.B.join("+"),
+  C: selected.C || "",
+  D: selected.D.join("+")
+};
 
   database.push(entry);
-
   saveDatabase();
   buildDatabaseTable();
-
   document.getElementById("object-name").value = "";
 }
 
 function saveDatabase(){
   localStorage.setItem("database", JSON.stringify(database));
 }
-// BYGG DATABASEN //
-function buildDatabaseTable(){
 
+/* ===== Bygg databastabellen ===== */
+function buildDatabaseTable(){
   const table = document.getElementById("database-table-body");
   table.innerHTML = "";
 
-  // sortera alfabetiskt efter objekt
-  const sorted = [...database].sort((a,b)=>
-    a.name.localeCompare(b.name,'sv')
-  );
+  const sorted = [...database].sort((a,b)=> a.name.localeCompare(b.name,'sv'));
 
   sorted.forEach((entry,index)=>{
-
     const codeA = entry.A ? entry.A.split("+").map(a=>facets.A.find(f=>f.name===a)?.code).join(".") : "";
     const codeB = entry.B ? facets.B.find(f=>f.name===entry.B)?.code : "";
     const codeC = entry.C ? facets.C.find(f=>f.name===entry.C)?.code : "";
     const codeD = entry.D ? facets.D.find(f=>f.name===entry.D)?.code : "";
-    const codeE = entry.E ? facets.E.find(f=>f.name===entry.E)?.code : "";
 
     const row = document.createElement("tr");
-
     row.innerHTML = `
       <td>
         <span class="facet-code A">${codeA}</span>
         <span class="facet-code B">${codeB}</span>
         <span class="facet-code C">${codeC}</span>
         <span class="facet-code D">${codeD}</span>
-        <span class="facet-code E">${codeE}</span>
       </td>
       <td>${entry.name}</td>
-      <td>
-        <button onclick="deleteEntry(${index})">✖</button>
-      </td>
+      <td><button onclick="deleteEntry(${index})">✖</button></td>
     `;
-
     table.appendChild(row);
-
   });
-
-} // TA BORT OBJEKT FRÅN DATABASEN //
-
-function deleteEntry(index){
-
-  database.splice(index,1);
-
-  saveDatabase();
-  buildDatabaseTable();
-
-} //LADDA FACETTER FRÅN DATABASEN //
-
-function loadEntry(index){
-
-  const entry = database[index];
-
-  selected.A = entry.A ? entry.A.split(".") : [];
-  selected.B = entry.B || null;
-  selected.C = entry.C || null;
-  selected.D = entry.D || null;
-  selected.E = entry.E || null;
-
-  document.querySelectorAll(".facet div").forEach(d=>d.classList.remove("selected"));
-
-  Object.keys(facets).forEach(fk=>{
-    const container = document.getElementById("facet-"+fk);
-
-    Array.from(container.children).forEach(div=>{
-      const text = div.textContent;
-
-      if(
-        selected[fk] && text.includes(selected[fk]) ||
-        (fk==="A" && selected.A.some(a=>text.includes(a)))
-      ){
-        div.classList.add("selected");
-      }
-    });
-  });
-
-  updateSelection();
-
 }
 
-const facets = {
-  A: [ { name: 'a', code: '1' }, { name: 'b', code: '2' }, { name: 'c', code: '3' } ],
-  B: [ { name: 'd', code: '1' }, { name: 'e', code: '2' }, { name: 'f', code: '3' } ],
-  C: [ { name: 'g', code: '1' }, { name: 'h', code: '2' } ],
-  D: [ { name: 'i', code: '1' }, { name: 'j', code: '2' } ],
-  E: [ { name: 'k', code: '1' }, { name: 'l', code: '2' } ]
-};
+function deleteEntry(index){
+  database.splice(index,1);
+  saveDatabase();
+  buildDatabaseTable();
+}
 
-const selected = { A: [], B:null, C:null, D:null, E:null };
-
-// ===== Bygg facetterna med klick =====
+/* ===== Bygg facetter med klick ===== */
 function buildFacets() {
   Object.keys(facets).forEach(fk => {
     const container = document.getElementById('facet-'+fk);
     facets[fk].forEach(opt => {
       const div = document.createElement('div');
-      div.innerHTML = '<span class="facet-code '+fk+'">'+opt.code+'</span> ('+opt.name+')';
-      div.classList.add(fk);
-      div.addEventListener('click', () => {
-        if(fk==='A'){
-          const i = selected.A.indexOf(opt.name);
-          if(i>=0){ selected.A.splice(i,1); div.classList.remove('selected'); }
-          else{ selected.A.push(opt.name); div.classList.add('selected'); }
-        } else {
-          if(selected[fk]===opt.name){ selected[fk]=null; div.classList.remove('selected'); }
-          else{
-            Array.from(container.children).forEach(c=>c.classList.remove('selected'));
-            selected[fk]=opt.name; div.classList.add('selected');
-          }
+      div.innerHTML = `<span class="facet-code ${fk}">${opt.code}</span> (${opt.name})`;
+
+      div.addEventListener('click', ()=>{
+        if(fk==='C'){ // C förblir single-select
+          options = Array.from(container.children);
+          options.forEach(c=>c.classList.remove('selected'));
+          if(selected[fk]===opt.name) selected[fk]=null;
+          else{ selected[fk]=opt.name; div.classList.add('selected'); }
+        } else { // A, B och D blir multi-select
+          if(!Array.isArray(selected[fk])) selected[fk]=[];
+          const i = selected[fk].indexOf(opt.name);
+          if(i>=0){ selected[fk].splice(i,1); div.classList.remove('selected'); }
+          else{ selected[fk].push(opt.name); div.classList.add('selected'); }
         }
         updateSelection();
       });
+
       container.appendChild(div);
     });
   });
 }
 
-// ===== Uppdatera vald kombination och färgad kod =====
-function updateSelection() {
-  const selectedStrings=[];
-  if(selected.A.length) selectedStrings.push(selected.A.join('.'));
-  ['B','C','D','E'].forEach(fk => { if(selected[fk]) selectedStrings.push(selected[fk]); });
-  document.getElementById('selected-combination').textContent =
-    selectedStrings.length ? selectedStrings.join(' - ') : 'Ingen facett vald';
 
+// ===== Uppdatera vald kombination och koden =====
+function updateSelection() {
   const combinedCodeDiv = document.getElementById('combined-code');
-  combinedCodeDiv.innerHTML='';
+  combinedCodeDiv.innerHTML = '';
 
   // Facett A
-  selected.A.forEach((name,i) => {
-    const code = facets.A.find(f=>f.name===name).code;
-    const span = document.createElement('span');
-    span.textContent = i>0 ? '.'+code : code;
-    span.style.color = '#0b8043';
-    combinedCodeDiv.appendChild(span);
-  });
+let codeParts = [];
+if(selected.A.length) codeParts.push(selected.A.join('.'));
+['B','D'].forEach(fk=>{
+  if(selected[fk] && selected[fk].length) codeParts.push(selected[fk].join('.'));
+});
+if(selected.C) codeParts.push(facets.C.find(f=>f.name===selected.C).code);
 
-  // Facetter B–E
-  ['B','C','D','E'].forEach((fk,i) => {
+combinedCodeDiv.textContent = codeParts.join(':');
+
+  // Facetter B–D
+  ['B','C','D'].forEach(fk=>{
     const val = selected[fk];
     if(val){
       const code = facets[fk].find(f=>f.name===val).code;
-      const span = document.createElement('span');
-      span.textContent = code;
-      if(i===0) span.style.color='#d93025';
-      if(i===1) span.style.color='#1a73e8';
-      if(i===2) span.style.color='#767957';
-      if(i===3) span.style.color='#b710c9';
-      combinedCodeDiv.appendChild(span);
+      codeParts.push(code); // lägg till separat
     }
   });
+
+  // Slå ihop med kolon
+  combinedCodeDiv.textContent = codeParts.join(':');
+
+  // ===== Här uppdaterar vi texten för vald kombination =====
+  const selectedStrings = [];
+  if(selected.A.length) selectedStrings.push(selected.A.join('.'));
+  ['B','C','D'].forEach(fk => {
+    if(selected[fk]) selectedStrings.push(selected[fk]);
+  });
+  document.getElementById('selected-combination').textContent =
+    selectedStrings.length ? selectedStrings.join(' - ') : 'Ingen facett vald';
 }
 
-// ===== Bygg indexet alfabetiskt efter term =====
-function buildIndex() {
+/* ===== Bygg indexet ===== */
+function buildIndex(){
   const indexDiv = document.getElementById('index');
   indexDiv.innerHTML = '';
 
   let entries = [];
-  Object.keys(facets).forEach(fk => {
-    facets[fk].forEach(opt => {
+  Object.keys(facets).forEach(fk=>{
+    facets[fk].forEach(opt=>{
       entries.push({ name: opt.name, code: opt.code, facet: fk });
     });
   });
 
-  // Sortera strikt alfabetiskt efter 'name'
-  entries.sort((a,b) => a.name.localeCompare(b.name, 'sv'));
+  entries.sort((a,b)=> a.name.localeCompare(b.name,'sv'));
 
-  entries.forEach(entry => {
+  entries.forEach(entry=>{
     const div = document.createElement('div');
     div.innerHTML = `${entry.name}: <span class="facet-code ${entry.facet}">${entry.code}</span>`;
     div.dataset.term = entry.name;
     div.dataset.facet = entry.facet;
-    div.addEventListener('click', () => selectFromIndex(entry.facet, entry.name));
+    div.addEventListener('click', ()=> selectFromIndex(entry.facet, entry.name));
     indexDiv.appendChild(div);
   });
 }
 
-// ===== Välj facet från index =====
-function selectFromIndex(fk, name) {
+/* ===== Välj från index ===== */
+function selectFromIndex(fk,name){
   const container = document.getElementById('facet-'+fk);
   const options = Array.from(container.children);
-  const div = options.find(d => d.textContent.includes(name));
+  const div = options.find(d=>d.textContent.includes(name));
 
   if(fk==='A'){
     const i = selected.A.indexOf(name);
@@ -456,19 +413,15 @@ function selectFromIndex(fk, name) {
   updateSelection();
 }
 
-// ===== Sök i index =====
-document.getElementById('index-search').addEventListener('input', function() {
+/* ===== Sök i index ===== */
+document.getElementById('index-search').addEventListener('input', function(){
   const query = this.value.toLowerCase();
-  document.querySelectorAll('#index div').forEach(div => {
-    div.style.display = div.dataset.term.includes(query) ? '' : 'none';
+  document.querySelectorAll('#index div').forEach(div=>{
+    div.style.display = div.dataset.term.toLowerCase().includes(query) ? '' : 'none';
   });
 });
 
-
-
-
-
-// ===== Init =====
+/* ===== Init ===== */
 buildFacets();
 buildIndex();
 updateSelection();
