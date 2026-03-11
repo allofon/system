@@ -228,54 +228,38 @@ const facets = {
   A: [ { name: '1901', code: '1901' }, { name: '1902', code: '1902' }, { name: '1903', code: '1903' } ],
   B: [ { name: 'Sverige', code: 'SE' }, { name: 'Norge', code: 'NO' }, { name: 'Finland', code: 'FI' } ],
   C: [ { name: 'Icke-binär', code: 'IB' }, { name: 'Kvinna', code: 'K' }, { name: 'Man', code: 'M' } ],
-  D: [
-    { name: 'Autofiktion', code: 'A' },
-    { name: 'Biografi', code: 'B' },
-    { name: 'Barnbok', code: 'Bb' },
-    { name: 'Dramatik', code: 'D' },
-    { name: 'Essä', code: 'E' },
-    { name: 'Facklitteratur', code: 'F' },
-    { name: 'Komedi', code: 'K' },
-    { name: 'Lyrik', code: 'L' },
-    { name: 'Musiktext', code: 'Mu' },
-    { name: 'Novell', code: 'N' },
-    { name: 'Roman', code: 'R' }
-  ]
+  D: [ { name: 'Autofiktion', code: 'A' }, { name: 'Biografi', code: 'B' }, { name: 'Barnbok', code: 'Bb' }, { name: 'Dramatik', code: 'D' }, { name: 'Essä', code: 'E' }, { name: 'Facklitteratur', code: 'F' }, { name: 'Komedi', code: 'K' }, { name: 'Lyrik', code: 'L' }, { name: 'Musiktext', code: 'Mu' }, { name: 'Novell', code: 'N' }, { name: 'Roman', code: 'R' } ]
 };
 
-const selected = { A: [], B: [], C: null, D: [] };
+const selected = { A: null, B: [], C: null, D: [] };
 
 function addToDatabase() {
   const name = document.getElementById("object-name").value.trim();
   if (!name) { alert("Skriv ett namn på objektet"); return; }
 
   const entry = {
-    name: name,
-    A: [...selected.A],
+    name,
+    A: selected.A || "",
     B: [...selected.B],
     C: selected.C || "",
     D: [...selected.D]
   };
 
   database.push(entry);
-  saveDatabase();
+  localStorage.setItem("database", JSON.stringify(database));
   buildDatabaseTable();
   document.getElementById("object-name").value = "";
 }
 
-function saveDatabase() {
-  localStorage.setItem("database", JSON.stringify(database));
-}
-
 function buildDatabaseTable() {
-  const table = document.getElementById("database-table-body");
-  table.innerHTML = "";
+  const tbody = document.getElementById("database-table-body");
+  tbody.innerHTML = "";
 
   database.forEach((entry, index) => {
-    const codeA = entry.A.map(a => facets.A.find(f => f.name === a)?.code).join('.');
-    const codeB = entry.B.map(b => facets.B.find(f => f.name === b)?.code).join('.');
-    const codeC = entry.C ? facets.C.find(f => f.name === entry.C)?.code : "";
-    const codeD = entry.D.map(d => facets.D.find(f => f.name === d)?.code).join('.');
+    const codeA = entry.A || "";
+    const codeB = entry.B.map(b => facets.B.find(f => f.name === b)?.code).join(".");
+    const codeC = entry.C || "";
+    const codeD = entry.D.map(d => facets.D.find(f => f.name === d)?.code).join(".");
 
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -288,106 +272,60 @@ function buildDatabaseTable() {
       <td>${entry.name}</td>
       <td><button onclick="deleteEntry(${index})">✖</button></td>
     `;
-    table.appendChild(row);
+    tbody.appendChild(row);
   });
 }
 
 function deleteEntry(index) {
-  database.splice(index, 1);
-  saveDatabase();
+  database.splice(index,1);
+  localStorage.setItem("database", JSON.stringify(database));
   buildDatabaseTable();
 }
 
 function buildFacets() {
   Object.keys(facets).forEach(fk => {
-    const container = document.getElementById('facet-' + fk);
+    const container = document.getElementById("facet-" + fk);
     facets[fk].forEach(opt => {
-      const div = document.createElement('div');
+      const div = document.createElement("div");
       div.innerHTML = `<span class="facet-code ${fk}">${opt.code}</span> (${opt.name})`;
-
-      div.addEventListener('click', () => {
-        if (fk === 'C') {
-          container.querySelectorAll('div').forEach(d => d.classList.remove('selected'));
-          selected.C = selected.C === opt.name ? null : opt.name;
-          if (selected.C) div.classList.add('selected');
+      div.addEventListener("click", () => {
+        if (fk === "C" || fk === "A") {
+          // single-select
+          container.querySelectorAll("div").forEach(d => d.classList.remove("selected"));
+          selected[fk] = selected[fk] === opt.name ? null : opt.name;
+          if (selected[fk]) div.classList.add("selected");
         } else {
-          if (!Array.isArray(selected[fk])) selected[fk] = [];
+          // multi-select
           const i = selected[fk].indexOf(opt.name);
-          if (i >= 0) { selected[fk].splice(i, 1); div.classList.remove('selected'); }
-          else { selected[fk].push(opt.name); div.classList.add('selected'); }
+          if (i >= 0) { selected[fk].splice(i,1); div.classList.remove("selected"); }
+          else { selected[fk].push(opt.name); div.classList.add("selected"); }
         }
         updateSelection();
       });
-
       container.appendChild(div);
     });
   });
 }
 
 function updateSelection() {
-  const combinedCodeDiv = document.getElementById('combined-code');
+  const combinedCodeDiv = document.getElementById("combined-code");
   const codeParts = [];
-
-  if (selected.A.length) codeParts.push(selected.A.map(a => facets.A.find(f => f.name === a)?.code).join('.'));
-  if (selected.B.length) codeParts.push(selected.B.map(b => facets.B.find(f => f.name === b)?.code).join('.'));
-  if (selected.C) codeParts.push(facets.C.find(f => f.name === selected.C).code);
-  if (selected.D.length) codeParts.push(selected.D.map(d => facets.D.find(f => f.name === d)?.code).join('.'));
-
-  combinedCodeDiv.textContent = codeParts.join(':');
+  if(selected.A) codeParts.push(selected.A);
+  if(selected.B.length) codeParts.push(selected.B.map(b => facets.B.find(f => f.name === b)?.code).join("."));
+  if(selected.C) codeParts.push(selected.C);
+  if(selected.D.length) codeParts.push(selected.D.map(d => facets.D.find(f => f.name === d)?.code).join("."));
+  combinedCodeDiv.textContent = codeParts.join(":");
 
   const selectedStrings = [];
-  if (selected.A.length) selectedStrings.push(selected.A.join(', '));
-  if (selected.B.length) selectedStrings.push(selected.B.join(', '));
-  if (selected.C) selectedStrings.push(selected.C);
-  if (selected.D.length) selectedStrings.push(selected.D.join(', '));
-
-  document.getElementById('selected-combination').textContent =
-    selectedStrings.length ? selectedStrings.join(' - ') : 'Ingen facett vald';
+  if(selected.A) selectedStrings.push(selected.A);
+  if(selected.B.length) selectedStrings.push(selected.B.join(", "));
+  if(selected.C) selectedStrings.push(selected.C);
+  if(selected.D.length) selectedStrings.push(selected.D.join(", "));
+  document.getElementById("selected-combination").textContent = selectedStrings.length ? selectedStrings.join(" - ") : "Ingen facett vald";
 }
 
-function buildIndex() {
-  const indexDiv = document.getElementById('index');
-  indexDiv.innerHTML = '';
-  Object.keys(facets).forEach(fk => {
-    facets[fk].forEach(opt => {
-      const div = document.createElement('div');
-      div.innerHTML = `${opt.name}: <span class="facet-code ${fk}">${opt.code}</span>`;
-      div.dataset.term = opt.name;
-      div.dataset.facet = fk;
-      div.addEventListener('click', () => selectFromIndex(fk, opt.name));
-      indexDiv.appendChild(div);
-    });
-  });
-}
-
-function selectFromIndex(fk, name) {
-  const container = document.getElementById('facet-' + fk);
-  const div = Array.from(container.children).find(d => d.textContent.includes(name));
-  if (!div) return;
-
-  if (fk === 'C') {
-    container.querySelectorAll('div').forEach(d => d.classList.remove('selected'));
-    selected.C = selected.C === name ? null : name;
-    if (selected.C) div.classList.add('selected');
-  } else {
-    if (!Array.isArray(selected[fk])) selected[fk] = [];
-    const i = selected[fk].indexOf(name);
-    if (i >= 0) { selected[fk].splice(i, 1); div.classList.remove('selected'); }
-    else { selected[fk].push(name); div.classList.add('selected'); }
-  }
-  updateSelection();
-}
-
-document.getElementById('index-search').addEventListener('input', function() {
-  const query = this.value.toLowerCase();
-  document.querySelectorAll('#index div').forEach(div => {
-    div.style.display = div.dataset.term.toLowerCase().includes(query) ? '' : 'none';
-  });
-});
-
-// Init
+// init
 buildFacets();
-buildIndex();
 updateSelection();
 buildDatabaseTable();
 </script>
