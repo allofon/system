@@ -534,6 +534,12 @@ body {
   background-color: #d0d0d0;
 }
 
+  .facet-code-cell {
+  font-weight: bold;
+  color: #BD3D24;
+  font-family: monospace;
+}
+
 </style>
 </head>
 <body>
@@ -884,7 +890,7 @@ function buildDatabaseTable(data = database) {
 
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${combinedCode}</td>
+      <td class="facet-code-cell">${combinedCode}</td>
       <td>${entry.name}</td>
       <td><button onclick="deleteEntry(${index})">✖</button></td>
     `;
