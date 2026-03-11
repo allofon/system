@@ -12,7 +12,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-color: #e9edef;
+  background-color: #e5ecef;
 }
 
 /* ===== Facetter ===== */
@@ -154,6 +154,34 @@ body {
   margin-left: 4px;
   font-size: 1.0em;            /* större siffror */
 }
+
+#add-button {
+  margin-top: 6px;
+}
+
+#object-name {
+  padding: 8px 12px;          /* större inmatningsfält */
+  font-size: 1.0em;           /* större text */
+  border: 2px solid #888;     /* tydligare kant */
+  border-radius: 5px;
+  margin-right: 7px;          /* lite mellanrum till knappen */
+}
+
+#add-button {
+  padding: 6px 13px;          /* större knapp */
+  font-size: 1.0em;           /* större text */
+  border: 2px solid #888;     /* tydligare kant */
+  border-radius: 5px;
+  background-color: #f0f0f0;  /* neutral bakgrund */
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  margin-top: 6px;            /* flyttar ner lite */
+}
+
+#add-button:hover {
+  background-color: #e0e0e0;  /* hover-effekt */
+  transform: translateY(-1px); /* subtil animation */
+}
 </style>
 </head>
 <body>
@@ -162,18 +190,14 @@ body {
 <div id="database-container">
   <h2>Databas</h2>
   <table id="database-table">
-    <thead>
-      <tr>
-        <th>Objekt</th>
-        <th>A</th>
-        <th>B</th>
-        <th>C</th>
-        <th>D</th>
-        <th>E</th>
-        <th>Kod</th>
-      </tr>
-    </thead>
-    <tbody>
+<thead>
+<tr>
+<th>Kod</th>
+<th>Objekt</th>
+<th></th>
+</tr>
+</thead>
+    <tbody id="database-table-body">
       <!-- Rader fylls via JS -->
     </tbody>
   </table>
@@ -192,11 +216,130 @@ body {
 <div id="selected-combination">Ingen facett vald</div>
 <div id="combined-code"></div>
 
+<h3>Lägg till i databas</h3>
+
+<input id="object-name" type="text" placeholder="Namn på objekt">
+
+<button id="add-button" onclick="addToDatabase()">Lägg till</button>
+
 <h3>Index</h3>
 <input type="text" id="index-search" placeholder="Sök term...">
 <div id="index"></div>
 
 <script>
+
+let database = JSON.parse(localStorage.getItem("database")) || [];
+
+function addToDatabase(){
+
+  const name = document.getElementById("object-name").value;
+
+  if(!name){
+    alert("Skriv ett namn på objektet");
+    return;
+  }
+
+  const entry = {
+    name: name,
+    A: selected.A.join("+"),
+    B: selected.B || "",
+    C: selected.C || "",
+    D: selected.D || "",
+    E: selected.E || ""
+  };
+
+  database.push(entry);
+
+  saveDatabase();
+  buildDatabaseTable();
+
+  document.getElementById("object-name").value = "";
+}
+
+function saveDatabase(){
+  localStorage.setItem("database", JSON.stringify(database));
+}
+// BYGG DATABASEN //
+function buildDatabaseTable(){
+
+  const table = document.getElementById("database-table-body");
+  table.innerHTML = "";
+
+  // sortera alfabetiskt efter objekt
+  const sorted = [...database].sort((a,b)=>
+    a.name.localeCompare(b.name,'sv')
+  );
+
+  sorted.forEach((entry,index)=>{
+
+    const codeA = entry.A ? entry.A.split("+").map(a=>facets.A.find(f=>f.name===a)?.code).join(".") : "";
+    const codeB = entry.B ? facets.B.find(f=>f.name===entry.B)?.code : "";
+    const codeC = entry.C ? facets.C.find(f=>f.name===entry.C)?.code : "";
+    const codeD = entry.D ? facets.D.find(f=>f.name===entry.D)?.code : "";
+    const codeE = entry.E ? facets.E.find(f=>f.name===entry.E)?.code : "";
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>
+        <span class="facet-code A">${codeA}</span>
+        <span class="facet-code B">${codeB}</span>
+        <span class="facet-code C">${codeC}</span>
+        <span class="facet-code D">${codeD}</span>
+        <span class="facet-code E">${codeE}</span>
+      </td>
+      <td>${entry.name}</td>
+      <td>
+        <button onclick="deleteEntry(${index})">✖</button>
+      </td>
+    `;
+
+    table.appendChild(row);
+
+  });
+
+} // TA BORT OBJEKT FRÅN DATABASEN //
+
+function deleteEntry(index){
+
+  database.splice(index,1);
+
+  saveDatabase();
+  buildDatabaseTable();
+
+} //LADDA FACETTER FRÅN DATABASEN //
+
+function loadEntry(index){
+
+  const entry = database[index];
+
+  selected.A = entry.A ? entry.A.split(".") : [];
+  selected.B = entry.B || null;
+  selected.C = entry.C || null;
+  selected.D = entry.D || null;
+  selected.E = entry.E || null;
+
+  document.querySelectorAll(".facet div").forEach(d=>d.classList.remove("selected"));
+
+  Object.keys(facets).forEach(fk=>{
+    const container = document.getElementById("facet-"+fk);
+
+    Array.from(container.children).forEach(div=>{
+      const text = div.textContent;
+
+      if(
+        selected[fk] && text.includes(selected[fk]) ||
+        (fk==="A" && selected.A.some(a=>text.includes(a)))
+      ){
+        div.classList.add("selected");
+      }
+    });
+  });
+
+  updateSelection();
+
+}
+
 const facets = {
   A: [ { name: 'a', code: '1' }, { name: 'b', code: '2' }, { name: 'c', code: '3' } ],
   B: [ { name: 'd', code: '1' }, { name: 'e', code: '2' }, { name: 'f', code: '3' } ],
@@ -237,7 +380,7 @@ function buildFacets() {
 // ===== Uppdatera vald kombination och färgad kod =====
 function updateSelection() {
   const selectedStrings=[];
-  if(selected.A.length) selectedStrings.push(selected.A.join('+'));
+  if(selected.A.length) selectedStrings.push(selected.A.join('.'));
   ['B','C','D','E'].forEach(fk => { if(selected[fk]) selectedStrings.push(selected[fk]); });
   document.getElementById('selected-combination').textContent =
     selectedStrings.length ? selectedStrings.join(' - ') : 'Ingen facett vald';
@@ -249,7 +392,7 @@ function updateSelection() {
   selected.A.forEach((name,i) => {
     const code = facets.A.find(f=>f.name===name).code;
     const span = document.createElement('span');
-    span.textContent = i>0 ? '+'+code : code;
+    span.textContent = i>0 ? '.'+code : code;
     span.style.color = '#0b8043';
     combinedCodeDiv.appendChild(span);
   });
@@ -321,36 +464,9 @@ document.getElementById('index-search').addEventListener('input', function() {
   });
 });
 
-// ===== Databasexempel =====
-const database = [
-  { name: "Objekt 1", A:"a", B:"d", C:"g", D:"i", E:"k" },
-  { name: "Objekt 2", A:"b", B:"e", C:"h", D:"j", E:"l" },
-  { name: "Objekt 3", A:"c", B:"f", C:"g", D:"i", E:"k" },
-];
 
-function buildDatabaseTable() {
-  const tbody = document.querySelector('#database-table tbody');
-  tbody.innerHTML = '';
-  database.forEach(entry => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${entry.name}</td>
-      <td>${entry.A}</td>
-      <td>${entry.B}</td>
-      <td>${entry.C}</td>
-      <td>${entry.D}</td>
-      <td>${entry.E}</td>
-      <td>
-        <span class="facet-code A">${facets.A.find(f=>f.name===entry.A).code}</span>
-        <span class="facet-code B">${facets.B.find(f=>f.name===entry.B).code}</span>
-        <span class="facet-code C">${facets.C.find(f=>f.name===entry.C).code}</span>
-        <span class="facet-code D">${facets.D.find(f=>f.name===entry.D).code}</span>
-        <span class="facet-code E">${facets.E.find(f=>f.name===entry.E).code}</span>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+
+
 
 // ===== Init =====
 buildFacets();
