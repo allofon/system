@@ -874,16 +874,17 @@ function buildDatabaseTable(data = database) {
   }
 
   filteredData.forEach((entry,index)=>{
-    const codeB = entry.B.join(".");
-    const codeD = entry.D.join(".");
+    // Slå ihop facetter med bindestreck för multi-select, kolon mellan facetter
+    const combinedCode = [
+      entry.A,
+      entry.B.join("-"),   // multi-select B med bindestreck
+      entry.C,
+      entry.D.join("-")    // multi-select D med bindestreck
+    ].filter(Boolean).join(":"); // kolon mellan facetter
+
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>
-        <span class="facet-code A">${entry.A}</span>
-        <span class="facet-code B">${codeB}</span>
-        <span class="facet-code C">${entry.C}</span>
-        <span class="facet-code D">${codeD}</span>
-      </td>
+      <td>${combinedCode}</td>
       <td>${entry.name}</td>
       <td><button onclick="deleteEntry(${index})">✖</button></td>
     `;
