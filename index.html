@@ -7,266 +7,881 @@
 /* ===== Kropp & centrering ===== */
 body {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  background-color: #f7f4f0;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== Flikar ===== */
+.tabs {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background-color: #e5ecef;
+  justify-content: center;
+  background-color: #e0dfdc;
+  border-bottom: 2px solid #cccccc;
+}
+.tabs button {
+  padding: 12px 25px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  transition: background-color 0.2s;
+}
+.tabs button.active {
+  border-bottom: 4px solid #4a90e2;
+  color: #4a90e2;
+}
+.tabs button:hover {
+  background-color: #dddddd;
+}
+
+/* ===== Sidainnehåll ===== */
+.tab-content {
+  display: none;
+  padding: 20px;
 }
 
 /* ===== Facetter ===== */
 .facet-container {
   display: flex;
-  gap: 40px;
+  gap: 20px;
   justify-content: center;
   margin-bottom: 20px;
 }
-
 .facet {
-  border: 2px solid #888;   /* Tjockare och tydligare ram */
-  border-radius: 8px;       /* Rundade hörn */
+  border: 2px solid #888;
+  border-radius: 8px;
   padding: 10px;
   width: 180px;
+  height: 320px;
   text-align: center;
-  background-color: #f9f9f9;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* mjuk skugga för djup */
+  background-color: #d9e8fc;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  overflow-y: auto;
 }
-
 .facet h3 {
   margin-top: 0;
-  cursor: default;
   font-size: 1.2em;
 }
-
-/* Facet-optioner */
 .facet div {
   margin: 5px 0;
   cursor: pointer;
   padding: 3px 5px;
   border-radius: 3px;
-  transition: background-color 0.2s, border 0.2s;
   border: 2px solid transparent;
   box-sizing: border-box;
+  transition: background-color 0.2s, border 0.2s;
 }
-
-/* Hover på icke-vald */
-.facet div:not(.selected):hover {
-  background-color: #efce88;
-}
-
-/* Markerad (valt) */
 .facet div.selected {
-  color: black;
+  background-color: #4a90e2;
+  color: white;
 }
-
-/* Hover på markerad */
-.facet div.selected:hover {
-  border: 2px solid #000;
-  box-sizing: border-box;
-}
-
-/* Facett-specifik bakgrund för valda */
-#facet-A div.selected { background-color: #71af73; }
-#facet-B div.selected { background-color: #eab4bf; }
-#facet-C div.selected { background-color: #aeadce; }
-#facet-D div.selected { background-color: #b8c251; }
-#facet-E div.selected { background-color: #e6bbea; }
-
-/* Färgade siffror */
 .facet-code {
   font-weight: bold;
-  font-size: 1.2em;
-  margin-right: 4px;
 }
 
-
-/* Svag bakgrund per facett */
-#facet-A { background-color: #e6f4ea; }
-#facet-B { background-color: #fce8e6; }
-#facet-C { background-color: #e8f0fe; }
-#facet-D { background-color: #eef1e6; }
-#facet-E { background-color: #f8e6fb; }
-
-/* ===== Vald kombination ===== */
-#selected-combination {
+/* ===== Databas & Index ===== */
+.database-index-container {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
   margin-top: 20px;
-  font-weight: bold;
-  font-size: 1.5em;
-  color: #333;
-  letter-spacing: 0.05em;
 }
-
-/* ===== Färgad kod/siffror ===== */
-#combined-code {
-  margin-top: 5px;
-  font-family: mono	space;
-  font-weight: bold;
-  font-size: 2.2em;
-}
-#combined-code span { margin-right: 0.2em; }
-
-/* ===== Index ===== */
-#index-search {
-  margin-top: 15px;
-  margin-bottom:10px;
-  padding:5px;
-  width:200px;
-}
-#index {
-  margin-top: 10px;
-  column-count: 3;
-  max-width: 500px;
-  text-align: center;
-}
-#index div {
-  cursor: pointer;
-  padding: 3px;
-}
-#index div:hover { background: #f0f0f0; }
-
-/* ===== Databas-tabell ===== */
 #database-container {
-  margin-bottom: 30px;
-  width: 90%;
-  max-width: 900px;
-  font-size: 1.0em;           /* större text */
+  width: 600px;
+  height: 620px;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+  overflow-y: auto;
+}
+#index-container {
+  width: 400px;
+  height: 620px;
+  background-color: #fffbe6;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+  overflow-y: auto;
 }
 #database-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: center;
-  font-size: 1.0em;           /* större text */
-}
-#database-table th, #database-table td {
-  border: 1px solid #ccc;
-  padding: 6px 10px;           /* mer padding */
 }
 #database-table th {
+  background-color: #cfe2f3;
+  padding: 8px;
+}
+#database-table td {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+}
+#database-table tr:hover {
   background-color: #f0f0f0;
 }
-#database-table td span.facet-code {
-  font-weight: bold;
-  margin-left: 4px;
-  font-size: 1.0em;            /* större siffror */
-}
 
-#add-button {
-  margin-top: 6px;
+/* Index */
+#index-search {
+  width: 70%;
+  padding: 5px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
-
-#object-name {
-  padding: 8px 12px;          /* större inmatningsfält */
-  font-size: 1.0em;           /* större text */
-  border: 2px solid #888;     /* tydligare kant */
-  border-radius: 5px;
-  margin-right: 7px;          /* lite mellanrum till knappen */
-}
-
-#add-button {
-  padding: 6px 13px;          /* större knapp */
-  font-size: 1.0em;           /* större text */
-  border: 2px solid #888;     /* tydligare kant */
-  border-radius: 5px;
-  background-color: #f0f0f0;  /* neutral bakgrund */
+#index div {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 4px;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  margin-top: 6px;            /* flyttar ner lite */
+  border-radius: 3px;
+}
+#index div:hover {
+  background-color: #ffe5b3;
+}
+#index div.selected {
+  background-color: #f5a623;
+  color: white;
+}
+#index div span.name { flex-shrink: 0; }
+#index div span.dots { flex-grow: 1; border-bottom: 1px dotted #888; margin: 0 5px; }
+#index div span.code { flex-shrink: 0; font-weight: bold; }
+
+#index-tabs button {
+  padding: 4px 10px;
+  font-size: 0.95em;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+#index-tabs button.active {
+  background: #4a90e2;
+  color: white;
+  border-color: #357ab8;
+}
+#index-tabs button:hover:not(.active) {
+  background: #d0d0d0;
 }
 
-#add-button:hover {
-  background-color: #e0e0e0;  /* hover-effekt */
-  transform: translateY(-1px); /* subtil animation */
+/* ===== Klassifikation-flik ===== */
+#klass {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
 }
+#klass h2 {
+  margin-bottom: 25px;
+}
+#klass input {
+  padding: 10px 14px;
+  font-size: 1.1em;
+  border: 2px solid #4a90e2;
+  border-radius: 5px;
+  width: 220px;
+  text-align: center;
+  margin: 5px 0;
+}
+#klass #add-button {
+  padding: 8px 18px;
+  font-size: 1.1em;
+  border: 2px solid #4a90e2;
+  border-radius: 5px;
+  background-color: #4a90e2;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin: 5px 0;
+}
+#klass #add-button:hover { background-color: #357ab8; }
+#selected-combination {
+  margin-top: 10px;
+  margin-bottom: 2px;
+  font-weight: bold;
+  font-size: 1.4em;
+  color: #1a3e72;
+  padding: 3px 6px;
+  border-radius: 4px;
+  text-align: center;
+}
+#combined-code {
+  margin-top: 0;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 2.2em;
+  color: #BD3D24;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-align: center;
+  display: inline-block;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ===== Flikar - pill-style ===== */
+.tabs {
+  display: flex;
+  justify-content: center;
+  background-color: #f0f0f0;
+  padding: 12px 0;
+  gap: 12px; /* mellanrum mellan tabbarna */
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.tabs button {
+  padding: 12px 28px;           /* större klickyta */
+  border: none;
+  border-radius: 999px;         /* pill-form */
+  background-color: #e0e0e0;
+  font-weight: bold;
+  font-size: 1.15em;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tabs button.active {
+  background-color: #4a90e2;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+}
+
+.tabs button:hover:not(.active) {
+  background-color: #d0d0d0;
+  transform: translateY(-1px);
+}
+
+/* Gör A-facetten scrollbar som D-facetten */
+#facet-A {
+  overflow-y: auto;   /* scroll vid behov */
+}
+
+#facet-B {
+  overflow-y: auto;
+}
+
+/* Index-flikar: större, pill-liknande och mer moderna */
+#index-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+
+#index-tabs button {
+  padding: 6px 14px;
+  font-size: 1em;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  background-color: #e0e0e0;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+#index-tabs button.active {
+  background-color: #4a90e2;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transform: translateY(-1px);
+}
+
+#index-tabs button:hover:not(.active) {
+  background-color: #d0d0d0;
+  transform: translateY(-1px);
+}
+
+/* Index-termer */
+#index-content {
+  max-height: 540px; /* höjd med scroll */
+  overflow-y: auto;
+  padding: 6px 8px;
+  background-color: #fffbe6;
+  border-radius: 8px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.05);
+}
+
+#index-content div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  margin: 2px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.95em;
+}
+
+#index-content div:hover {
+  background-color: #ffe5b3;
+}
+
+#index-content div.selected {
+  background-color: #f5a623;
+  color: white;
+  font-weight: bold;
+}
+
+#index-content::-webkit-scrollbar {
+  width: 6px;
+}
+#index-content::-webkit-scrollbar-thumb {
+  background-color: #4a90e2;
+  border-radius: 3px;
+}
+#index-content::-webkit-scrollbar-track {
+  background: #fffbe6;
+}
+
+#index-container {
+  width: 400px;
+  height: 620px;
+  background-color: #f9f7f2; /* ny bakgrund */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+}
+
+#index-tabs button {
+  background-color: #d6d6d6; /* inaktiv flik */
+  color: #333;
+}
+
+#index-tabs button.active {
+  background-color: #4a90e2; /* aktiv flik */
+  color: white;
+}
+
+#index-tabs button:hover:not(.active) {
+  background-color: #cce4f7; /* hover */
+}
+
+#index-content {
+  max-height: 540px;
+  overflow-y: auto;
+  padding: 6px 8px;
+  background-color: #f9f7f2; /* matchar container */
+  border-radius: 8px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.05);
+}
+
+#index-content div:hover {
+  background-color: #cce4f7; /* hover för element */
+}
+
+#index-content div.selected {
+  background-color: #f5a623; /* markerad */
+  color: white;
+}
+
+#index-content div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+#index-content div span.name {
+  flex-shrink: 0;
+  margin-right: 5px;
+}
+
+#index-content div span.dots {
+  flex-grow: 1;
+  border-bottom: 1px dotted #888; /* prickad linje mellan namn och antal */
+  margin: 0 5px;
+}
+
+#index-content div span.code {
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+/* CEntrera rubriker i databas och index */
+#database-container h2,
+#index-container h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+/* Centrera sökfältet i index-boxen */
+#index-search {
+  display: block;          /* gör input till block för margin auto */
+  margin: 0 auto 12px auto; /* topp 0, auto horisontellt, 12px under */
+  width: 80%;              /* justera bredden efter behov */
+  text-align: center;      /* centrera texten i fältet */
+}
+
+/* ===== Elegant toppmeny/flikar ===== */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding: 14px 0;
+  background-color: #f7f7f7;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.tabs button {
+  padding: 14px 30px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #e0e0e0, #ffffff);
+  font-weight: 600;
+  font-size: 1.16em;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+.tabs button.active {
+  background: linear-gradient(145deg, #4a90e2, #357ab8);
+  color: white;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  transform: translateY(-2px);
+}
+
+.tabs button:hover:not(.active) {
+  background: linear-gradient(145deg, #d5d5d5, #f0f0f0);
+  transform: translateY(-1px);
+}
+
+/* ===== Platta, enkla toppflikar med fet text ===== */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 0;
+  background-color: #f7f7f7;
+}
+
+.tabs button {
+  padding: 8px 18px;
+  border: none;
+  background-color: #e0e0e0;
+  font-weight: bold;   /* fetstil här */
+  font-size: 1.1em;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-radius: 0;    /* platt */
+}
+
+.tabs button.active {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.tabs button:hover:not(.active) {
+  background-color: #d0d0d0;
+}
+
+.facet h3 {
+  margin-top: 0;
+  font-size: 1.2em;
+  background-color: inherit; /* behåller facet-färgen */
+  position: sticky;
+  top: 0;
+  z-index: 1; /* så den ligger ovanför listan */
+  padding: 5px 0;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 0;
+  background-color: #f7f7f7;
+}
+
+.tab-logo {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #4a90e2;
+  margin-right: 15px;
+}
+
+.tabs button {
+  padding: 8px 18px;
+  border: none;
+  background-color: #e0e0e0;
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tabs button.active {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.tabs button:hover:not(.active) {
+  background-color: #d0d0d0;
+}
+
 </style>
 </head>
 <body>
 
-<!-- ===== Databas ===== -->
-<div id="database-container">
-  <h2>Databas</h2>
-  <table id="database-table">
-<thead>
-<tr>
-<th>Kod</th>
-<th>Objekt</th>
-<th></th>
-</tr>
-</thead>
-    <tbody id="database-table-body">
-      <!-- Rader fylls via JS -->
-    </tbody>
-  </table>
+<div class="tabs">
+<div class="tab-logo">NiLK</div>
+  <button class="tablink active" onclick="openTab(event,'klass')">Klassifikation</button>
+  <button class="tablink" onclick="openTab(event,'data')">Databas & Index</button>
 </div>
 
-<h2>Facetterat klassifikationssystem</h2>
-
-<div class="facet-container">
-  <div class="facet" id="facet-A"><h3>Vinstår</h3></div>
-  <div class="facet" id="facet-B"><h3>Nationalitet</h3></div>
-  <div class="facet" id="facet-C"><h3>Kön</h3></div>
-  <div class="facet" id="facet-D"><h3>Genre</h3></div>
+<div id="klass" class="tab-content" style="display:block;">
+  <div class="klass-wrapper" style="display:flex; flex-direction:column; align-items:center;">
+    <h2>Nobelpristagare i litteratur-klassifikation</h2>
+    <div class="facet-container">
+      <div class="facet" id="facet-A"><h3>Vinstår</h3></div>
+      <div class="facet" id="facet-B"><h3>Nationalitet</h3></div>
+      <div class="facet" id="facet-C"><h3>Kön</h3></div>
+      <div class="facet" id="facet-D"><h3>Genre</h3></div>
+    </div>
+    <div id="selected-combination">Ingen facett vald</div>
+    <div id="combined-code"></div>
+    <input id="object-name" type="text" placeholder="Namn på person">
+    <button id="add-button" onclick="addToDatabase()">Lägg till</button>
+  </div>
 </div>
 
-<div id="selected-combination">Ingen facett vald</div>
-<div id="combined-code"></div>
+<div id="data" class="tab-content">
+  <div class="database-index-container">
+    <div id="database-container">
+      <h2>Databas</h2>
+      <table id="database-table">
+        <thead>
+          <tr>
+            <th>Kod</th>
+            <th>Person</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="database-table-body"></tbody>
+      </table>
+    </div>
+    <div id="index-container">
+      <h2>Index</h2>
+      <input type="text" id="index-search" placeholder="Sök term...">
+      <div id="index-tabs" style="display:flex; gap:5px; margin-bottom:10px;">
+  <button class="index-tab active" data-facet="A">Vinstår</button>
+  <button class="index-tab" data-facet="B">Länder</button>
+  <button class="index-tab" data-facet="C">Kön</button>
+  <button class="index-tab" data-facet="D">Genre</button>
+</div>
+<div id="index-content"></div>
+    </div>
+  </div>
+</div>
 
-<h3>Lägg till i databas</h3>
-
-<input id="object-name" type="text" placeholder="Namn på objekt">
-
-<button id="add-button" onclick="addToDatabase()">Lägg till</button>
-
-<h3>Index</h3>
-<input type="text" id="index-search" placeholder="Sök term...">
-<div id="index"></div>
+</div>
 
 <script>
-let database = JSON.parse(localStorage.getItem("database")) || [];
-
-const facets = {
-  A: [ { name: '1901', code: '1901' }, { name: '1902', code: '1902' }, { name: '1903', code: '1903' } ],
-  B: [ { name: 'Sverige', code: 'SE' }, { name: 'Norge', code: 'NO' }, { name: 'Finland', code: 'FI' } ],
-  C: [ { name: 'Icke-binär', code: 'IB' }, { name: 'Kvinna', code: 'K' }, { name: 'Man', code: 'M' } ],
-  D: [ { name: 'Autofiktion', code: 'A' }, { name: 'Biografi', code: 'B' }, { name: 'Barnbok', code: 'Bb' }, { name: 'Dramatik', code: 'D' }, { name: 'Essä', code: 'E' }, { name: 'Facklitteratur', code: 'F' }, { name: 'Komedi', code: 'K' }, { name: 'Lyrik', code: 'L' }, { name: 'Musiktext', code: 'Mu' }, { name: 'Novell', code: 'N' }, { name: 'Roman', code: 'R' } ]
-};
-
-const selected = { A: null, B: [], C: null, D: [] };
-
-function addToDatabase() {
-  const name = document.getElementById("object-name").value.trim();
-  if (!name) { alert("Skriv ett namn på objektet"); return; }
-
-  const entry = {
-    name,
-    A: selected.A || "",
-    B: [...selected.B],
-    C: selected.C || "",
-    D: [...selected.D]
-  };
-
-  database.push(entry);
-  localStorage.setItem("database", JSON.stringify(database));
-  buildDatabaseTable();
-  document.getElementById("object-name").value = "";
+// Flikar
+function openTab(evt, tabName) {
+  document.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
+  document.querySelectorAll('.tablink').forEach(tb => tb.classList.remove('active'));
+  document.getElementById(tabName).style.display = 'block';
+  evt.currentTarget.classList.add('active');
 }
 
-function buildDatabaseTable() {
+// --- Facetter och databas ---
+let database = JSON.parse(localStorage.getItem("database")) || [];
+const facets = {
+  A:[
+{name:'1901',code:'1901'},{name:'1902',code:'1902'},{name:'1903',code:'1903'},
+{name:'1904',code:'1904'},{name:'1905',code:'1905'},{name:'1906',code:'1906'},
+{name:'1907',code:'1907'},{name:'1908',code:'1908'},{name:'1909',code:'1909'},
+{name:'1910',code:'1910'},{name:'1911',code:'1911'},{name:'1912',code:'1912'},
+{name:'1913',code:'1913'},{name:'1914',code:'1914'},{name:'1915',code:'1915'},
+{name:'1916',code:'1916'},{name:'1917',code:'1917'},{name:'1918',code:'1918'},
+{name:'1919',code:'1919'},{name:'1920',code:'1920'},{name:'1921',code:'1921'},
+{name:'1922',code:'1922'},{name:'1923',code:'1923'},{name:'1924',code:'1924'},
+{name:'1925',code:'1925'},{name:'1926',code:'1926'},{name:'1927',code:'1927'},
+{name:'1928',code:'1928'},{name:'1929',code:'1929'},{name:'1930',code:'1930'},
+{name:'1931',code:'1931'},{name:'1932',code:'1932'},{name:'1933',code:'1933'},
+{name:'1934',code:'1934'},{name:'1935',code:'1935'},{name:'1936',code:'1936'},
+{name:'1937',code:'1937'},{name:'1938',code:'1938'},{name:'1939',code:'1939'},
+{name:'1940',code:'1940'},{name:'1941',code:'1941'},{name:'1942',code:'1942'},
+{name:'1943',code:'1943'},{name:'1944',code:'1944'},{name:'1945',code:'1945'},
+{name:'1946',code:'1946'},{name:'1947',code:'1947'},{name:'1948',code:'1948'},
+{name:'1949',code:'1949'},{name:'1950',code:'1950'},{name:'1951',code:'1951'},
+{name:'1952',code:'1952'},{name:'1953',code:'1953'},{name:'1954',code:'1954'},
+{name:'1955',code:'1955'},{name:'1956',code:'1956'},{name:'1957',code:'1957'},
+{name:'1958',code:'1958'},{name:'1959',code:'1959'},{name:'1960',code:'1960'},
+{name:'1961',code:'1961'},{name:'1962',code:'1962'},{name:'1963',code:'1963'},
+{name:'1964',code:'1964'},{name:'1965',code:'1965'},{name:'1966',code:'1966'},
+{name:'1967',code:'1967'},{name:'1968',code:'1968'},{name:'1969',code:'1969'},
+{name:'1970',code:'1970'},{name:'1971',code:'1971'},{name:'1972',code:'1972'},
+{name:'1973',code:'1973'},{name:'1974',code:'1974'},{name:'1975',code:'1975'},
+{name:'1976',code:'1976'},{name:'1977',code:'1977'},{name:'1978',code:'1978'},
+{name:'1979',code:'1979'},{name:'1980',code:'1980'},{name:'1981',code:'1981'},
+{name:'1982',code:'1982'},{name:'1983',code:'1983'},{name:'1984',code:'1984'},
+{name:'1985',code:'1985'},{name:'1986',code:'1986'},{name:'1987',code:'1987'},
+{name:'1988',code:'1988'},{name:'1989',code:'1989'},{name:'1990',code:'1990'},
+{name:'1991',code:'1991'},{name:'1992',code:'1992'},{name:'1993',code:'1993'},
+{name:'1994',code:'1994'},{name:'1995',code:'1995'},{name:'1996',code:'1996'},
+{name:'1997',code:'1997'},{name:'1998',code:'1998'},{name:'1999',code:'1999'},
+{name:'2000',code:'2000'},{name:'2001',code:'2001'},{name:'2002',code:'2002'},
+{name:'2003',code:'2003'},{name:'2004',code:'2004'},{name:'2005',code:'2005'},
+{name:'2006',code:'2006'},{name:'2007',code:'2007'},{name:'2008',code:'2008'},
+{name:'2009',code:'2009'},{name:'2010',code:'2010'},{name:'2011',code:'2011'},
+{name:'2012',code:'2012'},{name:'2013',code:'2013'},{name:'2014',code:'2014'},
+{name:'2015',code:'2015'},{name:'2016',code:'2016'},{name:'2017',code:'2017'},
+{name:'2018',code:'2018'},{name:'2019',code:'2019'},{name:'2020',code:'2020'},
+{name:'2021',code:'2021'},{name:'2022',code:'2022'},{name:'2023',code:'2023'},
+{name:'2024',code:'2024'},{name:'2025',code:'2025'}
+],
+  B:  [
+  {name:'Afghanistan', code:'AF'},
+  {name:'Albanien', code:'AL'},
+  {name:'Algeriet', code:'DZ'},
+  {name:'Andorra', code:'AD'},
+  {name:'Angola', code:'AO'},
+  {name:'Argentina', code:'AR'},
+  {name:'Armenien', code:'AM'},
+  {name:'Azerbajdzjan', code:'AZ'},
+  {name:'Bahamas', code:'BS'},
+  {name:'Bahrain', code:'BH'},
+  {name:'Bangladesh', code:'BD'},
+  {name:'Barbados', code:'BB'},
+  {name:'Belize', code:'BZ'},
+  {name:'Belgien', code:'BE'},
+  {name:'Benin', code:'BJ'},
+  {name:'Bhutan', code:'BT'},
+  {name:'Bolivia', code:'BO'},
+  {name:'Bosnien och Hercegovina', code:'BA'},
+  {name:'Botswana', code:'BW'},
+  {name:'Brasilien', code:'BR'},
+  {name:'Brunei', code:'BN'},
+  {name:'Bulgarien', code:'BG'},
+  {name:'Burkina Faso', code:'BF'},
+  {name:'Burundi', code:'BI'},
+  {name:'Kap Verde', code:'CV'},
+  {name:'Kambodja', code:'KH'},
+  {name:'Kamerun', code:'CM'},
+  {name:'Kanada', code:'CA'},
+  {name:'Centralafrikanska republiken', code:'CF'},
+  {name:'Tchad', code:'TD'},
+  {name:'Chile', code:'CL'},
+  {name:'Kina', code:'CN'},
+  {name:'Colombia', code:'CO'},
+  {name:'Komorerna', code:'KM'},
+  {name:'Kongo-Brazzaville', code:'CG'},
+  {name:'Kongo-Kinshasa', code:'CD'},
+  {name:'Costa Rica', code:'CR'},
+  {name:'Kroatien', code:'HR'},
+  {name:'Kuba', code:'CU'},
+  {name:'Cypern', code:'CY'},
+  {name:'Tjeckien', code:'CZ'},
+  {name:'Danmark', code:'DK'},
+  {name:'Djibouti', code:'DJ'},
+  {name:'Dominica', code:'DM'},
+  {name:'Dominikanska republiken', code:'DO'},
+  {name:'Ecuador', code:'EC'},
+  {name:'Egypten', code:'EG'},
+  {name:'El Salvador', code:'SV'},
+  {name:'Ekvatorialguinea', code:'GQ'},
+  {name:'Eritrea', code:'ER'},
+  {name:'Estland', code:'EE'},
+  {name:'Eswatini', code:'SZ'},
+  {name:'Etiopien', code:'ET'},
+  {name:'Fiji', code:'FJ'},
+  {name:'Finland', code:'FI'},
+  {name:'Frankrike', code:'FR'},
+  {name:'Gabon', code:'GA'},
+  {name:'Gambia', code:'GM'},
+  {name:'Georgien', code:'GE'},
+  {name:'Tyskland', code:'DE'},
+  {name:'Ghana', code:'GH'},
+  {name:'Grekland', code:'GR'},
+  {name:'Grenada', code:'GD'},
+  {name:'Guatemala', code:'GT'},
+  {name:'Guinea', code:'GN'},
+  {name:'Guinea-Bissau', code:'GW'},
+  {name:'Guyana', code:'GY'},
+  {name:'Haiti', code:'HT'},
+  {name:'Honduras', code:'HN'},
+  {name:'Ungern', code:'HU'},
+  {name:'Island', code:'IS'},
+  {name:'Indien', code:'IN'},
+  {name:'Indonesien', code:'ID'},
+  {name:'Iran', code:'IR'},
+  {name:'Irak', code:'IQ'},
+  {name:'Irland', code:'IE'},
+  {name:'Israel', code:'IL'},
+  {name:'Italien', code:'IT'},
+  {name:'Jamaica', code:'JM'},
+  {name:'Japan', code:'JP'},
+  {name:'Jordanien', code:'JO'},
+  {name:'Kazakhstan', code:'KZ'},
+  {name:'Kenya', code:'KE'},
+  {name:'Kiribati', code:'KI'},
+  {name:'Nordkorea', code:'KP'},
+  {name:'Sydkorea', code:'KR'},
+  {name:'Kuwait', code:'KW'},
+  {name:'Kirgizistan', code:'KG'},
+  {name:'Laos', code:'LA'},
+  {name:'Lettland', code:'LV'},
+  {name:'Libanon', code:'LB'},
+  {name:'Lesotho', code:'LS'},
+  {name:'Liberia', code:'LR'},
+  {name:'Libyen', code:'LY'},
+  {name:'Liechtenstein', code:'LI'},
+  {name:'Litauen', code:'LT'},
+  {name:'Luxemburg', code:'LU'},
+  {name:'Madagaskar', code:'MG'},
+  {name:'Malawi', code:'MW'},
+  {name:'Malaysia', code:'MY'},
+  {name:'Maldiverna', code:'MV'},
+  {name:'Mali', code:'ML'},
+  {name:'Malta', code:'MT'},
+  {name:'Marshallöarna', code:'MH'},
+  {name:'Mauretanien', code:'MR'},
+  {name:'Mauritius', code:'MU'},
+  {name:'Mexiko', code:'MX'},
+  {name:'Mikronesiens federerade stater', code:'FM'},
+  {name:'Moldavien', code:'MD'},
+  {name:'Monaco', code:'MC'},
+  {name:'Mongoliet', code:'MN'},
+  {name:'Montenegro', code:'ME'},
+  {name:'Marocko', code:'MA'},
+  {name:'Moçambique', code:'MZ'},
+  {name:'Myanmar', code:'MM'},
+  {name:'Namibia', code:'NA'},
+  {name:'Nauru', code:'NR'},
+  {name:'Nepal', code:'NP'},
+  {name:'Nederländerna', code:'NL'},
+  {name:'Nya Zeeland', code:'NZ'},
+  {name:'Nicaragua', code:'NI'},
+  {name:'Niger', code:'NE'},
+  {name:'Nigeria', code:'NG'},
+  {name:'Nordmakedonien', code:'MK'},
+  {name:'Norge', code:'NO'},
+  {name:'Oman', code:'OM'},
+  {name:'Pakistan', code:'PK'},
+  {name:'Palau', code:'PW'},
+  {name:'Palestina', code:'PS'},
+  {name:'Panama', code:'PA'},
+  {name:'Papua Nya Guinea', code:'PG'},
+  {name:'Paraguay', code:'PY'},
+  {name:'Peru', code:'PE'},
+  {name:'Filippinerna', code:'PH'},
+  {name:'Polen', code:'PL'},
+  {name:'Portugal', code:'PT'},
+  {name:'Qatar', code:'QA'},
+  {name:'Rumänien', code:'RO'},
+  {name:'Ryssland', code:'RU'},
+  {name:'Rwanda', code:'RW'},
+  {name:'Saint Kitts och Nevis', code:'KN'},
+  {name:'Saint Lucia', code:'LC'},
+  {name:'Saint Vincent och Grenadinerna', code:'VC'},
+  {name:'Samoa', code:'WS'},
+  {name:'San Marino', code:'SM'},
+  {name:'São Tomé och Príncipe', code:'ST'},
+  {name:'Saudiarabien', code:'SA'},
+  {name:'Senegal', code:'SN'},
+  {name:'Serbien', code:'RS'},
+  {name:'Seychellerna', code:'SC'},
+  {name:'Sierra Leone', code:'SL'},
+  {name:'Singapore', code:'SG'},
+  {name:'Slovakien', code:'SK'},
+  {name:'Slovenien', code:'SI'},
+  {name:'Salomonöarna', code:'SB'},
+  {name:'Somalia', code:'SO'},
+  {name:'Sydafrika', code:'ZA'},
+  {name:'Spanien', code:'ES'},
+  {name:'Sri Lanka', code:'LK'},
+  {name:'Sudan', code:'SD'},
+  {name:'Sydsudan', code:'SS'},
+  {name:'Surinam', code:'SR'},
+  {name:'Sverige', code:'SE'},
+  {name:'Schweiz', code:'CH'},
+  {name:'Syrien', code:'SY'},
+  {name:'Taiwan', code:'TW'},
+  {name:'Tadzjikistan', code:'TJ'},
+  {name:'Tanzania', code:'TZ'},
+  {name:'Thailand', code:'TH'},
+  {name:'Östtimor', code:'TL'},
+  {name:'Togo', code:'TG'},
+  {name:'Tonga', code:'TO'},
+  {name:'Trinidad och Tobago', code:'TT'},
+  {name:'Tunisien', code:'TN'},
+  {name:'Turkiet', code:'TR'},
+  {name:'Turkmenistan', code:'TM'},
+  {name:'Tuvalu', code:'TV'},
+  {name:'Uganda', code:'UG'},
+  {name:'Ukraina', code:'UA'},
+  {name:'Förenade Arabemiraten', code:'AE'},
+  {name:'Storbritannien', code:'GB'},
+  {name:'USA', code:'US'},
+  {name:'Uruguay', code:'UY'},
+  {name:'Uzbekistan', code:'UZ'},
+  {name:'Vanuatu', code:'VU'},
+  {name:'Vatikanstaten', code:'VA'},
+  {name:'Venezuela', code:'VE'},
+  {name:'Vietnam', code:'VN'},
+  {name:'Jemen', code:'YE'},
+  {name:'Zambia', code:'ZM'},
+  {name:'Zimbabwe', code:'ZW'}
+],
+  C:[{name:'Icke-binär',code:'IB'},{name:'Kvinna',code:'K'},{name:'Man',code:'M'}],
+  D:[{name:'Autofiktion',code:'A'},{name:'Biografi',code:'B'},{name:'Barnbok',code:'Bb'},{name:'Dramatik',code:'D'},{name:'Essä',code:'E'},{name:'Facklitteratur',code:'F'},{name:'Komedi',code:'K'},{name:'Lyrik',code:'L'},{name:'Musiktext',code:'Mu'},{name:'Novell',code:'N'},{name:'Roman',code:'R'}]
+};
+const selected={A:null,B:[],C:null,D:[]};
+let activeFilter = null;
+
+// Lägg till i databas
+function addToDatabase(){
+  const name = document.getElementById("object-name").value.trim();
+  if(!name){alert("Skriv ett namn på personen"); return;}
+  database.push({name,A:selected.A||"",B:[...selected.B],C:selected.C||"",D:[...selected.D]});
+  localStorage.setItem("database", JSON.stringify(database));
+  document.getElementById("object-name").value="";
+  buildDatabaseTable();
+  buildIndex();
+  updateSelection();
+}
+
+// Bygg databas-tabell med filter
+function buildDatabaseTable(data = database) {
   const tbody = document.getElementById("database-table-body");
   tbody.innerHTML = "";
 
-  database.forEach((entry, index) => {
-    const codeA = entry.A || "";
-    const codeB = entry.B.map(b => facets.B.find(f => f.name === b)?.code).join(".");
-    const codeC = entry.C || "";
-    const codeD = entry.D.map(d => facets.D.find(f => f.name === d)?.code).join(".");
+  let filteredData = data;
+  if(activeFilter){
+    filteredData = data.filter(entry => {
+      const fk = activeFilter.facet;
+      const code = activeFilter.code;
+      if(fk === "C") return entry[fk] === code;
+      return entry[fk].includes(code);
+    });
+  }
 
+  filteredData.forEach((entry,index)=>{
+    const codeB = entry.B.join(".");
+    const codeD = entry.D.join(".");
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>
-        <span class="facet-code A">${codeA}</span>
+        <span class="facet-code A">${entry.A}</span>
         <span class="facet-code B">${codeB}</span>
-        <span class="facet-code C">${codeC}</span>
+        <span class="facet-code C">${entry.C}</span>
         <span class="facet-code D">${codeD}</span>
       </td>
       <td>${entry.name}</td>
@@ -274,61 +889,149 @@ function buildDatabaseTable() {
     `;
     tbody.appendChild(row);
   });
+
+  buildIndex();
 }
 
-function deleteEntry(index) {
+// Ta bort entry
+function deleteEntry(index){
   database.splice(index,1);
   localStorage.setItem("database", JSON.stringify(database));
   buildDatabaseTable();
+  buildIndex();
+  updateSelection();
 }
 
+// Bygg facetter
 function buildFacets() {
   Object.keys(facets).forEach(fk => {
     const container = document.getElementById("facet-" + fk);
+    
+    // Spara rubriken innan vi rensar
+    const header = container.querySelector("h3");
+    
+    // Rensa alla alternativ
+    container.innerHTML = "";
+    
+    // Lägg tillbaka rubriken
+    if(header) container.appendChild(header);
+
+    // Lägg till alternativen
     facets[fk].forEach(opt => {
       const div = document.createElement("div");
-      div.innerHTML = `<span class="facet-code ${fk}">${opt.code}</span> (${opt.name})`;
+      div.innerHTML = `<span class="facet-code">${opt.code}</span> (${opt.name})`;
+
       div.addEventListener("click", () => {
-        if (fk === "C" || fk === "A") {
+        if(fk === "A" || fk === "C") {
           // single-select
           container.querySelectorAll("div").forEach(d => d.classList.remove("selected"));
           selected[fk] = selected[fk] === opt.code ? null : opt.code;
-          if (selected[fk]) div.classList.add("selected");
+          if(selected[fk]) div.classList.add("selected");
         } else {
           // multi-select
-          const i = selected[fk].indexOf(opt.name);
-          if (i >= 0) { selected[fk].splice(i,1); div.classList.remove("selected"); }
-          else { selected[fk].push(opt.name); div.classList.add("selected"); }
+          const i = selected[fk].indexOf(opt.code);
+          if(i >= 0) {
+            selected[fk].splice(i,1);
+            div.classList.remove("selected");
+          } else {
+            selected[fk].push(opt.code);
+            div.classList.add("selected");
+          }
         }
         updateSelection();
       });
+
       container.appendChild(div);
     });
   });
 }
 
-function updateSelection() {
-  const combinedCodeDiv = document.getElementById("combined-code");
-  const codeParts = [];
+// Uppdatera vald kombination
+function updateSelection(){
+  const codeParts=[];
   if(selected.A) codeParts.push(selected.A);
-  if(selected.B.length) codeParts.push(selected.B.map(b => facets.B.find(f => f.name === b)?.code).join("."));
+  if(selected.B.length) codeParts.push(selected.B.join("-"));
   if(selected.C) codeParts.push(selected.C);
-  if(selected.D.length) codeParts.push(selected.D.map(d => facets.D.find(f => f.name === d)?.code).join("."));
-  combinedCodeDiv.textContent = codeParts.join(":");
+  if(selected.D.length) codeParts.push(selected.D.join("-"));
+  document.getElementById("combined-code").textContent = codeParts.join(":");
 
-  const selectedStrings = [];
-  if(selected.A) selectedStrings.push(selected.A);
-  if(selected.B.length) selectedStrings.push(selected.B.join(", "));
-  if(selected.C) selectedStrings.push(selected.C);
-  if(selected.D.length) selectedStrings.push(selected.D.join(", "));
-  document.getElementById("selected-combination").textContent = selectedStrings.length ? selectedStrings.join(" - ") : "Ingen facett vald";
+  const textParts=[];
+  if(selected.A) textParts.push(selected.A);
+  if(selected.B.length) textParts.push(selected.B.map(code=>facets.B.find(f=>f.code===code)?.name).join(", "));
+  if(selected.C) textParts.push(facets.C.find(f=>f.code===selected.C)?.name);
+  if(selected.D.length) textParts.push(selected.D.map(code=>facets.D.find(f=>f.code===code)?.name).join(", "));
+  document.getElementById("selected-combination").textContent = textParts.length ? textParts.join(" - ") : "Ingen facett vald";
 }
 
-// init
+let currentFacet = "A"; // default
+
+// Byt facett-flik
+document.querySelectorAll("#index-tabs .index-tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll("#index-tabs .index-tab").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFacet = btn.dataset.facet;
+    buildIndex();
+  });
+});
+
+// Bygg index baserat på aktuell facett
+function buildIndex(){
+  const indexDiv = document.getElementById("index-content");
+  indexDiv.innerHTML = "";
+
+  facets[currentFacet].forEach(opt=>{
+    let count = 0;
+    database.forEach(entry=>{
+      if(currentFacet === "A" || currentFacet === "C"){
+        if(entry[currentFacet] === opt.code) count++;
+      } else {
+        if(entry[currentFacet].includes(opt.code)) count++;
+      }
+    });
+
+    const div = document.createElement("div");
+    div.classList.toggle("selected", activeFilter?.facet===currentFacet && activeFilter?.code===opt.code);
+    div.innerHTML = `<span class="name">${opt.name}</span><span class="dots"></span><span class="code">${count}</span>`;
+
+    div.addEventListener("click",()=>{
+      if(activeFilter && activeFilter.facet===currentFacet && activeFilter.code===opt.code){
+        activeFilter = null; // avmarkera
+      } else {
+        activeFilter = {facet:currentFacet, code:opt.code};
+      }
+      buildDatabaseTable();
+      buildIndex();
+    });
+
+    indexDiv.appendChild(div);
+  });
+}
+
+// Sök i index/databas
+function searchIndex(){
+  const input = document.getElementById("index-search").value.toLowerCase();
+
+  document.querySelectorAll("#index div").forEach(div=>{
+    if(div.textContent.toLowerCase().includes(input)) div.style.display="flex";
+    else div.style.display="none";
+  });
+
+  const filteredDatabase = database.filter(entry=>{
+    const allCodes = [entry.A,...entry.B,entry.C,...entry.D].join(" ").toLowerCase();
+    const allNames = entry.name.toLowerCase();
+    return allCodes.includes(input) || allNames.includes(input);
+  });
+
+  buildDatabaseTable(filteredDatabase);
+}
+
+document.getElementById("index-search").addEventListener("input", searchIndex);
+
 buildFacets();
 updateSelection();
 buildDatabaseTable();
+buildIndex();
 </script>
-  
 </body>
 </html>
