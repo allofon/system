@@ -2,44 +2,58 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<title>Facetterat klassifikationssystem</title>
+<title>NiLK</title>
 <style>
+/* --- Grundinställningar --- */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f7f4f0;
+  background-color: #D3E7F2;
   color: #333;
   margin: 0;
   padding: 0;
 }
 
+/* --- Toppmeny / Tabs --- */
 .tabs {
   display: flex;
-  justify-content: center;
-  background-color: #e0dfdc;
-  border-bottom: 2px solid #cccccc;
+  justify-content: center; /* centrerar tabbarna */
+  align-items: center;
+  gap: 15px; 
+  padding: 10px 0;
+  background-color: #D3E7F2;
 }
-.tabs button {
-  padding: 12px 25px;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
+.tab-logo {
   font-weight: bold;
-  color: #333;
-  transition: background-color 0.2s;
-}
-.tabs button.active {
-  border-bottom: 4px solid #4a90e2;
+  font-size: 1.3em;
   color: #4a90e2;
 }
-.tabs button:hover {
-  background-color: #dddddd;
+.tabs button {
+  padding: 9px 22px;
+  border: none;
+  background-color: #FCFCFC;
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #333;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.tabs button.active {
+  background-color: #4a90e2;
+  color: white;
+}
+.tabs button:hover:not(.active) {
+  background-color: #a0c4ff; 
+  transform: translateY(-1px);
 }
 
+/* --- Flikar / Tab-content --- */
 .tab-content {
   display: none;
   padding: 20px;
 }
 
+/* --- Facetter --- */
 .facet-container {
   display: flex;
   gap: 20px;
@@ -60,6 +74,10 @@ body {
 .facet h3 {
   margin-top: 0;
   font-size: 1.2em;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 5px 0;
 }
 .facet div {
   margin: 5px 0;
@@ -67,7 +85,6 @@ body {
   padding: 3px 5px;
   border-radius: 3px;
   border: 2px solid transparent;
-  box-sizing: border-box;
   transition: background-color 0.2s, border 0.2s;
 }
 .facet div.selected {
@@ -77,90 +94,121 @@ body {
 .facet-code {
   font-weight: bold;
 }
+.facet-code-cell {
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1.65em;
+  color: #E82410;
+}
 
+#database-table td:first-child {
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 1.3em; /* här ändrar du storleken */
+  color: #E82410;
+}
+
+/* --- Databas och index --- */
 .database-index-container {
   display: flex;
   gap: 30px;
   justify-content: center;
   margin-top: 20px;
 }
-#database-container {
-  width: 600px;
-  height: 620px;
-  background-color: #ffffff;
+#database-container, #index-container {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 10px;
-  border-radius: 8px;
-  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
   overflow-y: auto;
 }
-#index-container {
-  width: 400px;
-  height: 620px;
-  background-color: #fffbe6;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
-  overflow-y: auto;
-}
+#database-container { width: 600px; height: 620px; background-color: #E4F1F5; }
+#index-container { width: 400px; height: 620px; background-color: #F0F0DF; }
+
+/* --- Tabell --- */
 #database-table {
   width: 100%;
   border-collapse: collapse;
 }
+#database-table th, #database-table td {
+  font-size: 1.1em;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  transition: background-color 0.2s;
+}
 #database-table th {
   background-color: #cfe2f3;
-  padding: 8px;
-}
-#database-table td {
-  padding: 6px 10px;
-  border: 1px solid #ccc;
+  text-decoration: underline;
+  text-decoration-color: #4a90e2;
+  text-decoration-thickness: 2px;
+  cursor: pointer;
 }
 #database-table tr:hover {
-  background-color: #f0f0f0;
+  background-color: #e8f0fe;
 }
 
+/* --- Index --- */
 #index-search {
   width: 70%;
-  padding: 5px;
-  margin-bottom: 8px;
+  padding: 6px;
+  margin: 0 auto 8px auto;
   border: 1px solid #ccc;
   border-radius: 4px;
+  display: block;
+  text-align: center;
+  font-size: 1.0em
 }
-#index div {
+#index-tabs {
   display: flex;
-  justify-content: space-between;
-  padding: 2px 4px;
-  cursor: pointer;
-  border-radius: 3px;
+  gap: 8px;
+  margin-bottom: 10px;
+  justify-content: center;
 }
-#index div:hover {
-  background-color: #ffe5b3;
-}
-#index div.selected {
-  background-color: #f5a623;
-  color: white;
-}
-#index div span.name { flex-shrink: 0; }
-#index div span.dots { flex-grow: 1; border-bottom: 1px dotted #888; margin: 0 5px; }
-#index div span.code { flex-shrink: 0; font-weight: bold; }
-
 #index-tabs button {
-  padding: 4px 10px;
-  font-size: 0.95em;
+  padding: 6px 14px;
+  font-size: 1em;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  background-color: #F0F0DF;
+  color: #333;
   cursor: pointer;
-  border: 1px solid #ccc;
-  background: #f0f0f0;
-  border-radius: 4px;
-  transition: all 0.2s;
+  transition: all 0.25s;
 }
 #index-tabs button.active {
-  background: #4a90e2;
+  background-color: #4a90e2;
   color: white;
-  border-color: #357ab8;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transform: translateY(-1px);
 }
 #index-tabs button:hover:not(.active) {
-  background: #d0d0d0;
+  background-color: #cce4f7;
 }
+#index-content {
+  max-height: 540px;
+  overflow-y: auto;
+  padding: 6px 8px;
+  background-color: #F0F0DF;
+  border-radius: 8px;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.05);
+}
+#index-content div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 4px;
+  margin: 2px 0;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.05em;
+}
+#index-content div:hover { background-color: #cce4f7; }
+#index-content div.selected { background-color: #f5a623; color: white; font-weight: bold; }
+#index-content div span.name { flex-shrink: 0; margin-right: 5px; }
+#index-content div span.dots { flex-grow: 1; border-bottom: 1px dotted #888; margin: 0 5px; }
+#index-content div span.code { flex-shrink: 0; font-weight: bold; }
 
+/* --- Klassifikation / Lägg till --- */
 #klass {
   display: flex;
   flex-direction: column;
@@ -169,8 +217,16 @@ body {
   padding: 20px;
 }
 #klass h2 {
+ font-size: 1.6em;           /* lite större än övrig text */
+  font-weight: 700;            /* fet stil */
+  color: #1a3e72;              /* mörkblå ton, matchar NiLK */
+  margin-top: 2px;
   margin-bottom: 25px;
-}
+  text-align: center;          
+  letter-spacing: 0.5px;       /* lite luft mellan bokstäverna */
+  border-bottom: 2px solid #4a90e2; /* subtil blå linje under rubrik */
+  
+  padding-bottom: 6px;         /* lite luft mellan text och linje */}
 #klass input {
   padding: 10px 14px;
   font-size: 1.1em;
@@ -180,21 +236,22 @@ body {
   text-align: center;
   margin: 5px 0;
 }
-#klass #add-button {
+#add-button {
   padding: 8px 18px;
   font-size: 1.1em;
   border: 2px solid #4a90e2;
   border-radius: 5px;
-  background-color: #4a90e2;
+  background: linear-gradient(135deg, #4a90e2, #357ab8);
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
   margin: 5px 0;
 }
-#klass #add-button:hover { background-color: #357ab8; }
+#add-button:hover { background: linear-gradient(135deg, #357ab8, #2a5ca8); }
+
+/* --- Vald kombination --- */
 #selected-combination {
-  margin-top: 10px;
-  margin-bottom: 2px;
+  margin: 10px 0 2px;
   font-weight: bold;
   font-size: 1.4em;
   color: #1a3e72;
@@ -207,324 +264,41 @@ body {
   font-family: monospace;
   font-weight: bold;
   font-size: 2.2em;
-  color: #BD3D24;
+  color: #E82410;
   padding: 6px 12px;
   border-radius: 6px;
   text-align: center;
-  display: inline-block;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 
-.tabs {
-  display: flex;
-  justify-content: center;
-  background-color: #f0f0f0;
-  padding: 12px 0;
-  gap: 12px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.tabs button {
-  padding: 12px 28px;           
-  border: none;
-  border-radius: 999px;         
-  background-color: #e0e0e0;
-  font-weight: bold;
-  font-size: 1.15em;
-  color: #555;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.tabs button.active {
-  background-color: #4a90e2;
-  color: white;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  transform: translateY(-2px);
-}
-
-.tabs button:hover:not(.active) {
-  background-color: #d0d0d0;
-  transform: translateY(-1px);
-}
-
-
-#facet-A {
-  overflow-y: auto;
-}
-
-#facet-B {
-  overflow-y: auto;
-}
-
-#index-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-  justify-content: center;
-}
-
-#index-tabs button {
-  padding: 6px 14px;
-  font-size: 1em;
-  font-weight: bold;
-  border: none;
-  border-radius: 20px;
-  background-color: #e0e0e0;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.25s;
-}
-
-#index-tabs button.active {
-  background-color: #4a90e2;
-  color: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  transform: translateY(-1px);
-}
-
-#index-tabs button:hover:not(.active) {
-  background-color: #d0d0d0;
-  transform: translateY(-1px);
-}
-
-#index-content {
-  max-height: 540px;
-  overflow-y: auto;
-  padding: 6px 8px;
-  background-color: #fffbe6;
-  border-radius: 8px;
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.05);
-}
-
-#index-content div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 10px;
-  margin: 2px 0;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 0.95em;
-}
-
-#index-content div:hover {
-  background-color: #ffe5b3;
-}
-
-#index-content div.selected {
-  background-color: #f5a623;
-  color: white;
-  font-weight: bold;
-}
-
+/* --- Scrollbars --- */
+.facet::-webkit-scrollbar,
 #index-content::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
+.facet::-webkit-scrollbar-thumb,
 #index-content::-webkit-scrollbar-thumb {
   background-color: #4a90e2;
   border-radius: 3px;
 }
+.facet::-webkit-scrollbar-track,
 #index-content::-webkit-scrollbar-track {
-  background: #fffbe6;
+  background: #e0e7f5;
 }
 
-#index-container {
-  width: 400px;
-  height: 620px;
-  background-color: #f9f7f2;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+/* --- Övrigt --- */
+#database-table tr,
+.facet div {
+  transition: all 0.2s ease-in-out;
 }
 
-#index-tabs button {
-  background-color: #d6d6d6;
-  color: #333;
-}
-
-#index-tabs button.active {
-  background-color: #4a90e2;
-  color: white;
-}
-
-#index-tabs button:hover:not(.active) {
-  background-color: #cce4f7;
-}
-
-#index-content {
-  max-height: 540px;
-  overflow-y: auto;
-  padding: 6px 8px;
-  background-color: #f9f7f2;
-  border-radius: 8px;
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.05);
-}
-
-#index-content div:hover {
-  background-color: #cce4f7;
-}
-
-#index-content div.selected {
-  background-color: #f5a623;
-  color: white;
-}
-
-#index-content div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2px 4px;
-  cursor: pointer;
-  border-radius: 3px;
-}
-
-#index-content div span.name {
-  flex-shrink: 0;
-  margin-right: 5px;
-}
-
-#index-content div span.dots {
-  flex-grow: 1;
-  border-bottom: 1px dotted #888;
-  margin: 0 5px;
-}
-
-#index-content div span.code {
-  flex-shrink: 0;
-  font-weight: bold;
-}
-
+/* --- Centrera rubriker och sökruta --- */
 #database-container h2,
-#index-container h2 {
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 15px;
-}
-
+#index-container h2,
 #index-search {
-  display: block;          
-  margin: 0 auto 12px auto; 
-  width: 80%;              
-  text-align: center; 
-}
-
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  padding: 14px 0;
-  background-color: #f7f7f7;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.tabs button {
-  padding: 14px 30px;
-  border: none;
-  border-radius: 999px;
-  background: linear-gradient(145deg, #e0e0e0, #ffffff);
-  font-weight: 600;
-  font-size: 1.16em;
-  color: #555;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(.4,0,.2,1);
-}
-
-.tabs button.active {
-  background: linear-gradient(145deg, #4a90e2, #357ab8);
-  color: white;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-  transform: translateY(-2px);
-}
-
-.tabs button:hover:not(.active) {
-  background: linear-gradient(145deg, #d5d5d5, #f0f0f0);
-  transform: translateY(-1px);
-}
-
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 8px 0;
-  background-color: #f7f7f7;
-}
-
-.tabs button {
-  padding: 8px 18px;
-  border: none;
-  background-color: #e0e0e0;
-  font-weight: bold;  
-  font-size: 1.1em;
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border-radius: 0; 
-}
-
-.tabs button.active {
-  background-color: #4a90e2;
-  color: white;
-}
-
-.tabs button:hover:not(.active) {
-  background-color: #d0d0d0;
-}
-
-.facet h3 {
-  margin-top: 0;
-  font-size: 1.2em;
-  background-color: inherit;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  padding: 5px 0;
-}
-
-.tabs {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 8px 0;
-  background-color: #f7f7f7;
-}
-
-.tab-logo {
-  font-weight: bold;
-  font-size: 1.2em;
-  color: #4a90e2;
-  margin-right: 15px;
-}
-
-.tabs button {
-  padding: 8px 18px;
-  border: none;
-  background-color: #e0e0e0;
-  font-weight: bold;
-  font-size: 1.1em;
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.tabs button.active {
-  background-color: #4a90e2;
-  color: white;
-}
-
-.tabs button:hover:not(.active) {
-  background-color: #d0d0d0;
-}
-
-  .facet-code-cell {
-  font-weight: bold;
-  color: #BD3D24;
-  font-family: monospace;
-    font-size: 1.4em;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 </style>
@@ -532,9 +306,11 @@ body {
 <body>
 
 <div class="tabs">
-<div class="tab-logo">NiLK</div>
-  <button class="tablink active" onclick="openTab(event,'klass')">Klassifikation</button>
-  <button class="tablink" onclick="openTab(event,'data')">Databas & index</button>
+  <div class="tab-logo">NiLK</div>
+  <div class="tab-buttons">
+    <button class="tablink active" onclick="openTab(event,'klass')">Klassifikation</button>
+    <button class="tablink" onclick="openTab(event,'data')">Databas & index</button>
+  </div>
 </div>
 
 <div id="klass" class="tab-content" style="display:block;">
@@ -560,8 +336,8 @@ body {
       <table id="database-table">
         <thead>
           <tr>
-            <th>Kod</th>
-            <th>Person</th>
+            <th id="th-code">Kod</th>
+            <th id="th-name">Person</th>
             <th></th>
           </tr>
         </thead>
@@ -570,10 +346,10 @@ body {
     </div>
     <div id="index-container">
       <h2>Index</h2>
-      <input type="text" id="index-search" placeholder="Sök i index...">
+      <input type="text" id="index-search" placeholder="Sök i index och databas...">
       <div id="index-tabs" style="display:flex; gap:5px; margin-bottom:10px;">
   <button class="index-tab active" data-facet="A">Prisår</button>
-  <button class="index-tab" data-facet="B">Länder</button>
+  <button class="index-tab" data-facet="B">Nationalitet</button>
   <button class="index-tab" data-facet="C">Kön</button>
   <button class="index-tab" data-facet="D">Genre</button>
 </div>
@@ -585,7 +361,7 @@ body {
 </div>
 
 <script>
-
+// Flikar
 function openTab(evt, tabName) {
   document.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
   document.querySelectorAll('.tablink').forEach(tb => tb.classList.remove('active'));
@@ -593,19 +369,19 @@ function openTab(evt, tabName) {
   evt.currentTarget.classList.add('active');
 }
 
-
+// --- Facetter och databas ---
 let database = JSON.parse(localStorage.getItem("database")) || [];
 const facets = {
   A:[
 {name:'1900-1909',code:'1900'},{name:'1910-1919',code:'1910'},{name:'1920-1929',code:'1920'},
-{name:'1930-1931',code:'1930'},{name:'1940-1949',code:'1940'},{name:'1950-1951',code:'1950'},
+{name:'1930-1939',code:'1930'},{name:'1940-1949',code:'1940'},{name:'1950-1959',code:'1950'},
 {name:'1960-1969',code:'1960'},{name:'1970-1979',code:'1970'},{name:'1980-1989',code:'1980'},
 {name:'1990-1999',code:'1990'},{name:'2000-2009',code:'2000'},{name:'2010-2019',code:'2010'},
 {name:'2020-2029',code:'2020'}
 ],
   B:  [
-  {name:'Argentina', code:'AR'},       
-  {name:'Australien', code:'AU'},       
+  {name:'Argentina', code:'AR'}, 
+  {name:'Australien', code:'AU'},
   {name:'Belgien', code:'BE'},
   {name:'Chile', code:'CL'},
   {name:'Colombia', code:'CO'},
@@ -620,13 +396,13 @@ const facets = {
   {name:'Israel', code:'IL'},
   {name:'Italien', code:'IT'},
   {name:'Japan', code:'JP'},
-  {name:'Kanada', code:'CA'},           
+  {name:'Kanada', code:'CA'},
   {name:'Kina', code:'CN'},
   {name:'Mexiko', code:'MX'},
-  {name:'Nederländerna', code:'NL'},    
+  {name:'Nederländerna', code:'NL'},
   {name:'Nigeria', code:'NG'},
   {name:'Norge', code:'NO'},
-  {name:'Nya Zeeland', code:'NZ'},      
+  {name:'Nya Zeeland', code:'NZ'},
   {name:'Peru', code:'PE'},
   {name:'Polen', code:'PL'},
   {name:'Portugal', code:'PT'},
@@ -649,12 +425,16 @@ const facets = {
   {name:'Österrike', code:'AT'}
 ],
   C:[{name:'Icke-binär',code:'3'},{name:'Kvinna',code:'2'},{name:'Man',code:'1'}],
-  D:[{name:'Barn & ungdom',code:'B'},{name:'Dramatik',code:'D'},{name:'Fantasy',code:'Fa'},{name:'Feelgood',code:'Fe'},{name:'Kriminallitteratur',code:'K'},{name:'Lyrik',code:'L'},{name:'Prosa',code:'P'},{name:'Science fiction',code:'Sc'},{name:'Skräck',code:'Sk'},{name:'Tecknade serie',code:'T'}]
+  D:[{name:'Barn & ungdom',code:'B'},{name:'Dramatik',code:'D'},{name:'Fantasy',code:'Fa'},{name:'Feelgood',code:'F'},{name:'Kriminallitteratur',code:'K'},{name:'Lyrik',code:'L'},{name:'Prosa',code:'P'},{name:'Science fiction',code:'Sc'}, {name:'Skräck',code:'Sk'}, {name:'Tecknade serier',code:'T'}]
 };
+
+
+
 
 const selected={A:null,B:[],C:null,D:[]};
 let activeFilter = null;
 
+// Lägg till i databas
 function addToDatabase(){
   const name = document.getElementById("object-name").value.trim();
   if(!name){alert("Skriv ett namn på personen"); return;}
@@ -665,6 +445,17 @@ function addToDatabase(){
   buildIndex();
   updateSelection();
 }
+
+// Bygg databas-tabell med filter
+function formatName(fullName){
+  const parts = fullName.trim().split(" ");
+  if(parts.length === 1) return parts[0]; // ensamt namn
+  const lastName = parts.pop();
+  const firstNames = parts.join(" ");
+  return `${lastName}, ${firstNames}`;
+}
+
+let currentSort = { column: 'name', ascending: true }; // standard sortering
 
 function buildDatabaseTable(data = database) {
   const tbody = document.getElementById("database-table-body");
@@ -680,25 +471,66 @@ function buildDatabaseTable(data = database) {
     });
   }
 
-  filteredData.forEach((entry,index)=>{
-    const combinedCode = [
-      entry.A,
-      entry.B.join("-"),
-      entry.C,
-      entry.D.join("-")
-    ].filter(Boolean).join(":");
+  // Sortera efter aktuell kolumn
+  filteredData.sort((a, b) => {
+    let aValue, bValue;
+
+    if(currentSort.column === 'name'){
+      aValue = a.name;
+      bValue = b.name;
+      aValue = a.name.split(" ").slice(-1)[0]; // sista ordet = efternamn
+bValue = b.name.split(" ").slice(-1)[0];
+return currentSort.ascending ? aValue.localeCompare(bValue, 'sv') : bValue.localeCompare(aValue, 'sv');
+    } else if(currentSort.column === 'code'){
+      // Kombinerad kod
+      aValue = [a.A, a.B.join("-"), a.C, a.D.join("-")].filter(Boolean).join(":");
+      bValue = [b.A, b.B.join("-"), b.C, b.D.join("-")].filter(Boolean).join(":");
+      return currentSort.ascending ? aValue.localeCompare(bValue, 'sv') : bValue.localeCompare(aValue, 'sv');
+    }
+  });
+
+  filteredData.forEach(entry => {
+    const combinedCode = [entry.A, entry.B.join("-"), entry.C, entry.D.join("-")].filter(Boolean).join(":");
 
     const row = document.createElement("tr");
     row.innerHTML = `
       <td class="facet-code-cell">${combinedCode}</td>
-      <td>${entry.name}</td>
-      <td><button onclick="deleteEntry(${index})">✖</button></td>
+      <td>${formatName(entry.name)}</td>
+      <td><button>✖</button></td>
     `;
+
+    row.querySelector("button").addEventListener("click", () => {
+      const indexInDb = database.indexOf(entry);
+      if(indexInDb >= 0){
+        database.splice(indexInDb, 1);
+        localStorage.setItem("database", JSON.stringify(database));
+        buildDatabaseTable();
+        buildIndex();
+        updateSelection();
+      }
+    });
+
     tbody.appendChild(row);
   });
 
   buildIndex();
 }
+
+
+// Koppla klick på rubrikerna
+document.querySelectorAll("#database-table th").forEach(th => {
+  th.style.cursor = "pointer";
+  th.addEventListener("click", () => {
+    const column = th.textContent.toLowerCase().includes("kod") ? "code" : "name";
+    if(currentSort.column === column){
+      currentSort.ascending = !currentSort.ascending; // växla sorteringsordning
+    } else {
+      currentSort.column = column;
+      currentSort.ascending = true;
+    }
+    buildDatabaseTable();
+  });
+});
 
 function deleteEntry(index){
   database.splice(index,1);
@@ -707,7 +539,6 @@ function deleteEntry(index){
   buildIndex();
   updateSelection();
 }
-
 
 function buildFacets() {
   Object.keys(facets).forEach(fk => {
@@ -725,10 +556,12 @@ function buildFacets() {
 
       div.addEventListener("click", () => {
         if(fk === "A" || fk === "C") {
+
           container.querySelectorAll("div").forEach(d => d.classList.remove("selected"));
           selected[fk] = selected[fk] === opt.code ? null : opt.code;
           if(selected[fk]) div.classList.add("selected");
         } else {
+        
           const i = selected[fk].indexOf(opt.code);
           if(i >= 0) {
             selected[fk].splice(i,1);
@@ -746,6 +579,7 @@ function buildFacets() {
   });
 }
 
+
 function updateSelection(){
   const codeParts=[];
   if(selected.A) codeParts.push(selected.A);
@@ -762,7 +596,7 @@ function updateSelection(){
   document.getElementById("selected-combination").textContent = textParts.length ? textParts.join(" - ") : "Ingen facett vald";
 }
 
-let currentFacet = "A";
+let currentFacet = "A"; // default
 
 document.querySelectorAll("#index-tabs .index-tab").forEach(btn=>{
   btn.addEventListener("click",()=>{
@@ -793,7 +627,7 @@ function buildIndex(){
 
     div.addEventListener("click",()=>{
       if(activeFilter && activeFilter.facet===currentFacet && activeFilter.code===opt.code){
-        activeFilter = null;
+        activeFilter = null; // avmarkera
       } else {
         activeFilter = {facet:currentFacet, code:opt.code};
       }
@@ -805,24 +639,30 @@ function buildIndex(){
   });
 }
 
-function searchIndex(){
+function searchAll() {
   const input = document.getElementById("index-search").value.toLowerCase();
 
-  document.querySelectorAll("#index div").forEach(div=>{
-    if(div.textContent.toLowerCase().includes(input)) div.style.display="flex";
-    else div.style.display="none";
+  // --- Filtrera databasen ---
+  const filteredDatabase = database.filter(entry => {
+    const combinedCode = [entry.A,...entry.B,entry.C,...entry.D].join(" ").toLowerCase();
+    const name = entry.name.toLowerCase();
+    return combinedCode.includes(input) || name.includes(input);
   });
-
-  const filteredDatabase = database.filter(entry=>{
-    const allCodes = [entry.A,...entry.B,entry.C,...entry.D].join(" ").toLowerCase();
-    const allNames = entry.name.toLowerCase();
-    return allCodes.includes(input) || allNames.includes(input);
-  });
-
   buildDatabaseTable(filteredDatabase);
+
+  // --- Filtrera indexet ---
+  const indexDivs = document.querySelectorAll("#index-content div");
+  indexDivs.forEach(div => {
+    if(div.textContent.toLowerCase().includes(input)){
+      div.style.display = "flex";
+    } else {
+      div.style.display = "none";
+    }
+  });
 }
 
-document.getElementById("index-search").addEventListener("input", searchIndex);
+// Koppla input-event
+document.getElementById("index-search").addEventListener("input", searchAll);
 
 buildFacets();
 updateSelection();
